@@ -1,8 +1,11 @@
+import 'package:bluex/cubit/checking_cubit.dart';
 import 'package:bluex/widget/Checking.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:intl/intl.dart';
+
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class Screeneleven extends StatefulWidget {
   const Screeneleven({Key? key}) : super(key: key);
@@ -13,9 +16,9 @@ class Screeneleven extends StatefulWidget {
 
 class _ScreenelevenState extends State<Screeneleven> {
   final String time = DateFormat('kk:mm').format(DateTime.now());
-  String checkin = '..:..';
-  String checkout = '..:..';
-  String workinghours = '..:..';
+  // String checkin = '..:..';
+  // String checkout = '..:..';
+  // String workinghours = '..:..';
 
   @override
   Widget build(BuildContext context) {
@@ -62,15 +65,18 @@ class _ScreenelevenState extends State<Screeneleven> {
               ),
             ),
             onTap: () {
-              print("hello");
-              setState(() {
-                if (checkin == '..:..') {
-                  checkin = time;
-                } else {
-                  checkout = time;
-                  workinghours = time;
-                }
-              });
+              // print("hello");
+              // setState(() {
+              //   if (checkin == '..:..') {
+              //     checkin = time;
+              //   } else {
+              //     checkout = time;
+              //     workinghours = time;
+              //   }
+              // });
+
+              context.read<CheckingCubit>().updateTime();
+               
             },
           ),
           SizedBox(height: 25),
@@ -95,14 +101,17 @@ class _ScreenelevenState extends State<Screeneleven> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                Checking(icon: Icons.alarm, timeone: checkin, text: 'Checkin'),
+                Checking(
+                    icon: Icons.alarm,
+                    timeone: context.watch<CheckingCubit>().state.checkin,
+                    text: 'Checkin'),
                 Checking(
                     icon: Icons.alarm_add_sharp,
-                    timeone: checkout,
+                    timeone: context.watch<CheckingCubit>().state.checkout,
                     text: 'Checkout'),
                 Checking(
                     icon: Icons.alarm_on_outlined,
-                    timeone: workinghours,
+                    timeone: context.watch<CheckingCubit>().state.workinghours,
                     text: 'working hour'),
               ],
             ),
