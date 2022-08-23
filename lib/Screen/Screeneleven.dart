@@ -2,9 +2,20 @@ import 'package:bluex/widget/Checking.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:intl/intl.dart';
 
-class Screeneleven extends StatelessWidget {
+class Screeneleven extends StatefulWidget {
   const Screeneleven({Key? key}) : super(key: key);
+
+  @override
+  State<Screeneleven> createState() => _ScreenelevenState();
+}
+
+class _ScreenelevenState extends State<Screeneleven> {
+  final String time = DateFormat('kk:mm').format(DateTime.now());
+  String checkin = '..:..';
+  String checkout = '..:..';
+  String workinghours = '..:..';
 
   @override
   Widget build(BuildContext context) {
@@ -22,32 +33,45 @@ class Screeneleven extends StatelessWidget {
             ),
           ),
           SizedBox(height: 70),
-          Text('09:10',
+          Text(time,
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 25,
               )),
-          Text('Wednesday,Dec 12',
+          Text(DateFormat('MMMMEEEEd').format(DateTime.now()),
               style: TextStyle(
                 color: Colors.grey,
                 fontSize: 15,
               )),
           SizedBox(height: 20),
-          Container(
-            height: 150,
-            width: 150,
-            decoration: BoxDecoration(
-              color: Colors.blue,
-              border: Border.all(
+          GestureDetector(
+            child: Container(
+              height: 150,
+              width: 150,
+              decoration: BoxDecoration(
                 color: Colors.blue,
+                border: Border.all(
+                  color: Colors.blue,
+                ),
+                shape: BoxShape.circle,
               ),
-              shape: BoxShape.circle,
+              child: Icon(
+                Icons.headphones,
+                color: Colors.white,
+                size: 50,
+              ),
             ),
-            child: Icon(
-              Icons.headphones,
-              color: Colors.white,
-              size: 50,
-            ),
+            onTap: () {
+              print("hello");
+              setState(() {
+                if (checkin == '..:..') {
+                  checkin = time;
+                } else {
+                  checkout = time;
+                  workinghours = time;
+                }
+              });
+            },
           ),
           SizedBox(height: 25),
           Row(
@@ -71,13 +95,19 @@ class Screeneleven extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                Checking(icon: Icons.alarm, timeone: '../..', text: 'Checkin'),
-                Checking(icon: Icons.alarm_add_sharp, timeone: '../..', text: 'Checkout'),
-                Checking(icon: Icons.alarm_on_outlined,timeone: '../..', text: 'working hour'),
+                Checking(icon: Icons.alarm, timeone: checkin, text: 'Checkin'),
+                Checking(
+                    icon: Icons.alarm_add_sharp,
+                    timeone: checkout,
+                    text: 'Checkout'),
+                Checking(
+                    icon: Icons.alarm_on_outlined,
+                    timeone: workinghours,
+                    text: 'working hour'),
               ],
             ),
           ),
-          SizedBox(height: 60),
+          SizedBox(height: 50),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
